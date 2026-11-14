@@ -71,12 +71,13 @@ public class RelatorioJiraService {
                 counts.put(status, counts.get(status) + 1);
             }
             long totalCases = testSuite.getCases().size();
-            summaryCell(dataRow, 2, "Falhou", counts.get(com.tester.enuns.Status.RETORNO), totalCases, dataStyle);
-            summaryCell(dataRow, 3, "Impedimento", counts.get(com.tester.enuns.Status.IMPEDIMENTO), totalCases, dataStyle);
-            summaryCell(dataRow, 4, "Em progresso", counts.get(com.tester.enuns.Status.EM_PROGRESSO), totalCases, dataStyle);
-            summaryCell(responsibleRow, 2, "Aprovado", counts.get(com.tester.enuns.Status.CONCLUIDA), totalCases, dataStyle);
-            responsibleRow.createCell(3).setCellValue("Total da suíte: " + totalCases + (totalCases == 1 ? " CT" : " CTs"));
-            responsibleRow.getCell(3).setCellStyle(dataStyle);
+            Row suiteRow = sheet.createRow(currentRow++);
+            suiteRow.createCell(0).setCellValue("Suíte");
+            suiteRow.getCell(0).setCellStyle(headerStyle);
+            summaryCell(suiteRow, 1, "Falhou", counts.get(com.tester.enuns.Status.RETORNO), totalCases, dataStyle);
+            summaryCell(suiteRow, 2, "Impedimento", counts.get(com.tester.enuns.Status.IMPEDIMENTO), totalCases, dataStyle);
+            summaryCell(suiteRow, 3, "Em progresso", counts.get(com.tester.enuns.Status.EM_PROGRESSO), totalCases, dataStyle);
+            summaryCell(suiteRow, 4, "Aprovado", counts.get(com.tester.enuns.Status.CONCLUIDA), totalCases, dataStyle);
 
             // Linha de Projeto, Chamado, Matriz, Usuário, Senha
             Row metadataHeaderRow = sheet.createRow(currentRow++);
@@ -105,8 +106,6 @@ public class RelatorioJiraService {
             if (statusFiltro != null && !statusFiltro.isEmpty()) {
                 testCases.removeIf(testCase -> !statusFiltro.contains(testCase.getStatus()));
             }
-            responsibleRow.createCell(4).setCellValue("Detalhes enviados: " + testCases.size() + (testCases.size() == 1 ? " CT" : " CTs"));
-            responsibleRow.getCell(4).setCellStyle(dataStyle);
             for (TestCaseEntity testCase : testCases) {
                 Row dataRowCase = sheet.createRow(currentRow++);
                 dataRowCase.createCell(0).setCellValue(testCase.getScenario());

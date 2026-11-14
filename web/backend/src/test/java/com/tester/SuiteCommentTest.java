@@ -40,15 +40,15 @@ class SuiteCommentTest {
         var b=new TestCaseEntity();b.setId(2L);b.setScenario("Sair");
         suite.setCases(new HashSet<>(List.of(b,a)));
         var preview=service().preview("QA-42",9L,TODOS);
-        assertThat(preview.rows()).hasSize(8);
+        assertThat(preview.rows()).hasSize(9);
         assertThat(preview.cases()).isEqualTo(2);
         assertThat(preview.rows().get(0).get(1)).isEqualTo("14/09/2026");
-        assertThat(preview.rows().get(3)).containsExactly("QA-42","123","Teste","usuario-teste","senha-teste");
-        assertThat(preview.rows().get(6)).containsExactly(a.getScenario(),"Entrar","Entrou","https://vimeo.com/123","EM_PROGRESSO");
+        assertThat(preview.rows().get(4)).containsExactly("QA-42","123","Teste","usuario-teste","senha-teste");
+        assertThat(preview.rows().get(7)).containsExactly(a.getScenario(),"Entrar","Entrou","https://vimeo.com/123","EM_PROGRESSO");
         var doc=service().document("QA-42",9L,TODOS);
         assertThat(doc.path("type").asText()).isEqualTo("doc");
         assertThat(doc.path("version").asInt()).isEqualTo(1);
-        assertThat(doc.at("/content/1/content/5/content/0/type").asText()).isEqualTo("tableHeader");
+        assertThat(doc.at("/content/1/content/6/content/0/type").asText()).isEqualTo("tableHeader");
         assertThat(doc.toString()).contains("hardBreak","acentuação & <texto>","senha-teste");
     }
     /**
@@ -61,9 +61,9 @@ class SuiteCommentTest {
         var doc=service().document("QA-42",9L,TODOS);
         assertThat(doc.toString()).doesNotContain("\"content\":[]");
         var primeiraLinha=doc.at("/content/1/content/0/content");
-        assertThat(primeiraLinha.get(2).at("/content/0/content/0/text").asText()).isEqualTo("Falhou: 0% (0)");
+        assertThat(primeiraLinha.get(2).at("/content/0").has("content")).isFalse();
         // The empty obtained-result cell still uses a valid empty ADF paragraph.
-        assertThat(doc.at("/content/1/content/6/content/2/content/0").has("content")).isFalse();
+        assertThat(doc.at("/content/1/content/7/content/2/content/0").has("content")).isFalse();
         assertThat(primeiraLinha.get(0).at("/content/0/content/0/text").asText()).isEqualTo("Data");
     }
     /**
@@ -77,7 +77,7 @@ class SuiteCommentTest {
         suite.setCases(Set.of(caso));
 
         var doc = service().document("QA-42", 9L, TODOS);
-        var celula = doc.at("/content/1/content/6/content/3/content/0/content/0");
+        var celula = doc.at("/content/1/content/7/content/3/content/0/content/0");
         assertThat(celula.path("type").asText()).isEqualTo("inlineCard");
         assertThat(celula.at("/attrs/url").asText())
             .isEqualTo("https://vimeo.com/1226964093/12293c01c4?share=copy&fl=sv&fe=ci");
@@ -90,7 +90,7 @@ class SuiteCommentTest {
         suite.setCases(Set.of(caso));
 
         var doc = service().document("QA-42", 9L, TODOS);
-        var pedacos = doc.at("/content/1/content/6/content/2/content/0/content");
+        var pedacos = doc.at("/content/1/content/7/content/2/content/0/content");
         assertThat(pedacos.get(0).path("text").asText()).isEqualTo("Falhou, veja ");
         assertThat(pedacos.get(1).path("text").asText()).isEqualTo("https://vimeo.com/123456");
         assertThat(pedacos.get(1).at("/marks/0/type").asText()).isEqualTo("link");
@@ -105,7 +105,7 @@ class SuiteCommentTest {
         caso.setObtainedResult("Tudo certo");
         suite.setCases(Set.of(caso));
 
-        var celula = service().document("QA-42", 9L, TODOS).at("/content/1/content/6/content/2/content/0/content");
+        var celula = service().document("QA-42", 9L, TODOS).at("/content/1/content/7/content/2/content/0/content");
         assertThat(celula).hasSize(1);
         assertThat(celula.get(0).path("type").asText()).isEqualTo("text");
         assertThat(celula.get(0).has("marks")).isFalse();
@@ -119,12 +119,12 @@ class SuiteCommentTest {
 
         var retorno=service().preview("QA-42",9L,Set.of(Status.RETORNO));
         assertThat(retorno.cases()).isEqualTo(1);
-        assertThat(retorno.rows().get(6).get(0)).isEqualTo("Devolvido");
+        assertThat(retorno.rows().get(7).get(0)).isEqualTo("Devolvido");
         assertThat(retorno.title()).contains("Falhou");
 
         var concluida=service().preview("QA-42",9L,Set.of(Status.CONCLUIDA));
         assertThat(concluida.cases()).isEqualTo(1);
-        assertThat(concluida.rows().get(6).get(0)).isEqualTo("Concluído");
+        assertThat(concluida.rows().get(7).get(0)).isEqualTo("Concluído");
 
         var dois=service().preview("QA-42",9L,Set.of(Status.CONCLUIDA,Status.RETORNO));
         assertThat(dois.cases()).isEqualTo(2);
@@ -210,9 +210,9 @@ class SuiteCommentTest {
         String url="https://drive.google.com/file/d/video_123/view?resourcekey=key&usp=sharing";
         c.setVideoEvidence(url);suite.setCases(Set.of(c));
         var document=service().document("QA-42",9L,TODOS);
-        assertThat(document.at("/content/1/content/6/content/3/content/0/content/0/attrs/url").asText()).isEqualTo(url);
+        assertThat(document.at("/content/1/content/7/content/3/content/0/content/0/attrs/url").asText()).isEqualTo(url);
         try(var workbook=new org.apache.poi.xssf.usermodel.XSSFWorkbook(new java.io.ByteArrayInputStream(new RelatorioJiraService(suites).gerarRelatorioJiraExcel(9L,TODOS)))) {
-            assertThat(workbook.getSheetAt(0).getRow(6).getCell(3).getHyperlink().getAddress()).isEqualTo(url);
+            assertThat(workbook.getSheetAt(0).getRow(7).getCell(3).getHyperlink().getAddress()).isEqualTo(url);
         }
     }
     @Test void sendsOnlySelectedCaseMediaWithThumbnailsAndVideoAfterEvidence() {
@@ -229,9 +229,9 @@ class SuiteCommentTest {
         when(media.bytes(eq(1L),any())).thenReturn(new byte[]{1,2});
         when(jira.attachmentMedia(eq("QA-42"),anyString(),anyString(),any())).thenReturn("11111111-1111-4111-8111-111111111111");
         var doc=service.document("QA-42",9L,Set.of(Status.RETORNO));
-        assertThat(doc.at("/content/1/content/6/content/1/content/1/type").asText()).isEqualTo("mediaSingle");
-        assertThat(doc.at("/content/1/content/6/content/3/content/0/content/0/attrs/url").asText()).isEqualTo("https://vimeo.com/123");
-        assertThat(doc.at("/content/1/content/6/content/3/content/1/type").asText()).isEqualTo("mediaSingle");
+        assertThat(doc.at("/content/1/content/7/content/1/content/1/type").asText()).isEqualTo("mediaSingle");
+        assertThat(doc.at("/content/1/content/7/content/3/content/0/content/0/attrs/url").asText()).isEqualTo("https://vimeo.com/123");
+        assertThat(doc.at("/content/1/content/7/content/3/content/1/type").asText()).isEqualTo("mediaSingle");
         assertThat(doc.toString()).doesNotContain("Concluído","qaWiki");
         verify(media,never()).list(2L);
         verify(jira).attachmentMedia(eq("QA-42"),eq(image.name()),eq(image.mime()),any());
@@ -247,36 +247,38 @@ class SuiteCommentTest {
         var ordered=mapper.createObjectNode();var blocks=ordered.putArray("expected");
         blocks.addObject().put("type","text").put("text","Erro encontrado conforme a imagem");blocks.addObject().put("type","image").put("mediaId",one.id().toString());blocks.addObject().put("type","text").put("text","Depois do primeiro print");blocks.addObject().put("type","image").put("mediaId",two.id().toString());blocks.addObject().put("type","text").put("text","Conclusão");ordered.putArray("obtained");
         when(content.read(1)).thenReturn(ordered);when(jira.attachmentMedia(eq("QA-42"),anyString(),anyString(),any())).thenReturn("11111111-1111-4111-8111-111111111111");
-        var result=service.document("QA-42",9L,Set.of());var cell=result.at("/content/1/content/6/content/1/content");
+        var result=service.document("QA-42",9L,Set.of());var cell=result.at("/content/1/content/7/content/1/content");
         assertThat(cell).hasSize(5);assertThat(cell.get(0).at("/content/0/text").asText()).isEqualTo("Erro encontrado conforme a imagem");assertThat(cell.get(1).path("type").asText()).isEqualTo("mediaSingle");assertThat(cell.get(2).at("/content/0/text").asText()).isEqualTo("Depois do primeiro print");assertThat(cell.get(3).path("type").asText()).isEqualTo("mediaSingle");assertThat(cell.get(4).at("/content/0/text").asText()).isEqualTo("Conclusão");
     }
     @Test void reportLabelsAndJiraResultColorsAreReadable() {
         suite.setCases(Set.of(caso(1L,"Cenário com falha",Status.RETORNO),caso(2L,"Cenário aprovado",Status.CONCLUIDA)));
         var service=service();var preview=service.preview("QA-42",9L,TODOS);
-        assertThat(preview.rows().get(2)).containsExactly("Projeto","Chamado","Matriz","Usuário","Senha");
-        assertThat(preview.rows().get(5).get(3)).isEqualTo("Evidência");
-        assertThat(preview.rows().get(6).get(4)).isEqualTo("Falhou");assertThat(preview.rows().get(7).get(4)).isEqualTo("Aprovado");
+        assertThat(preview.rows().get(3)).containsExactly("Projeto","Chamado","Matriz","Usuário","Senha");
+        assertThat(preview.rows().get(6).get(3)).isEqualTo("Evidência");
+        assertThat(preview.rows().get(7).get(4)).isEqualTo("Falhou");assertThat(preview.rows().get(8).get(4)).isEqualTo("Aprovado");
         var doc=service.document("QA-42",9L,TODOS);
-        assertThat(doc.at("/content/1/content/6/content/4/content/0/content/0/text").asText()).isEqualTo("Falhou");
-        assertThat(doc.at("/content/1/content/6/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#AE2E24");
-        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/text").asText()).isEqualTo("Aprovado");
-        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#216E4E");
+        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/text").asText()).isEqualTo("Falhou");
+        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#AE2E24");
+        assertThat(doc.at("/content/1/content/8/content/4/content/0/content/0/text").asText()).isEqualTo("Aprovado");
+        assertThat(doc.at("/content/1/content/8/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#216E4E");
     }
     @Test void summaryShowsWholeSuitePercentagesEvenWhenDetailsAreFiltered() {
         suite.setCases(Set.of(caso(1L,"Falha",Status.RETORNO),caso(2L,"Bloqueado",Status.IMPEDIMENTO),caso(3L,"Andamento",Status.EM_PROGRESSO),caso(4L,"Passou",Status.CONCLUIDA)));
         var service=service();var preview=service.preview("QA-42",9L,Set.of(Status.RETORNO));
         assertThat(preview.cases()).isEqualTo(1);
-        assertThat(preview.rows().get(0).subList(2,5)).containsExactly("Falhou: 25% (1)","Impedimento: 25% (1)","Em progresso: 25% (1)");
-        assertThat(preview.rows().get(1).subList(2,5)).containsExactly("Aprovado: 25% (1)","Total da suíte: 4 CTs","Detalhes enviados: 1 CT");
+        assertThat(preview.rows().get(0).subList(2,5)).containsOnly("");
+        assertThat(preview.rows().get(1).subList(2,5)).containsOnly("");
+        assertThat(preview.rows().get(2)).containsExactly("Suíte","Falhou: 25% (1)","Impedimento: 25% (1)","Em progresso: 25% (1)","Aprovado: 25% (1)");
         var doc=service.document("QA-42",9L,Set.of(Status.RETORNO));
-        assertThat(doc.at("/content/1/content/0/content/3/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#FFFF00");
-        assertThat(doc.at("/content/1/content/0/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
-        assertThat(doc.at("/content/1/content/1/content/2/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#216E4E");
+        assertThat(doc.toString()).doesNotContain("Total da suíte", "Detalhes enviados");
+        assertThat(doc.at("/content/1/content/2/content/2/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#FF9800");
+        assertThat(doc.at("/content/1/content/2/content/3/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
+        assertThat(doc.at("/content/1/content/2/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#216E4E");
     }
-    @Test void impedimentIsYellowAndInProgressIsBlue() {
+    @Test void impedimentIsOrangeAndInProgressIsBlue() {
         suite.setCases(Set.of(caso(1L,"Bloqueado",Status.IMPEDIMENTO),caso(2L,"Andamento",Status.EM_PROGRESSO)));
         var doc=service().document("QA-42",9L,Set.of());
-        assertThat(doc.at("/content/1/content/6/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#FFFF00");
-        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
+        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#FF9800");
+        assertThat(doc.at("/content/1/content/8/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
     }
 }

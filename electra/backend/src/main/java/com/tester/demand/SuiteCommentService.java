@@ -29,7 +29,7 @@ public class SuiteCommentService {
     public record Preview(String title, List<List<String>> rows, int cases) {}
 
     /** Linha do Excel onde começa a listagem de casos; acima dela vai o cabeçalho da suíte. */
-    private static final int PRIMEIRA_LINHA_DE_CASO = 6;
+    private static final int PRIMEIRA_LINHA_DE_CASO = 7;
 
     @Transactional(readOnly=true)
     public Preview preview(String key, Long suiteId, Set<Status> statusFiltro) {
@@ -83,8 +83,8 @@ public class SuiteCommentService {
             var row=body.addObject().put("type","tableRow").putArray("content");
             int column=0;
             for(String value:preview.rows().get(i)) {
-                var cell=row.addObject().put("type",i==2 || i==5 ? "tableHeader":"tableCell");
-                boolean summary = (i==0 && column>=2) || (i==1 && column==2);
+                var cell=row.addObject().put("type",i==3 || i==6 ? "tableHeader":"tableCell");
+                boolean summary = i==2 && column>=1;
                 cell.putArray("content").add(summary || (i>=PRIMEIRA_LINHA_DE_CASO && column==4)?resultParagraph(value):paragraph(value));
                 column++;
             }
@@ -146,7 +146,7 @@ public class SuiteCommentService {
     }
     private JsonNode resultParagraph(String value) {
         var node=paragraph(value);
-        String color=value!=null && value.startsWith("Falhou")?"#AE2E24":value!=null && value.startsWith("Aprovado")?"#216E4E":value!=null && value.startsWith("Impedimento")?"#FFFF00":value!=null && (value.equals("em progresso") || value.startsWith("Em progresso"))?"#0055CC":null;
+        String color=value!=null && value.startsWith("Falhou")?"#AE2E24":value!=null && value.startsWith("Aprovado")?"#216E4E":value!=null && value.startsWith("Impedimento")?"#FF9800":value!=null && (value.equals("em progresso") || value.startsWith("Em progresso"))?"#0055CC":null;
         if(color!=null)for(var text:node.path("content"))if("text".equals(text.path("type").asText())) {
             var marks=((com.fasterxml.jackson.databind.node.ObjectNode)text).putArray("marks");
             marks.addObject().put("type","strong");
