@@ -1,0 +1,453 @@
+:root {
+  --qa-accent: #6366f1;
+  --qa-accent-2: #a855f7;
+  --qa-page: #f4f5fb;
+  --qa-surface: #ffffff;
+  --qa-surface-2: #fbfbfe;
+  --qa-border: rgba(17, 24, 39, 0.09);
+  --qa-shadow:
+    0 1px 2px rgba(17, 24, 39, 0.04), 0 12px 28px -18px rgba(17, 24, 39, 0.22);
+  --qa-shadow-hover:
+    0 1px 2px rgba(17, 24, 39, 0.05), 0 18px 40px -18px rgba(79, 70, 229, 0.35);
+  --qa-glow: radial-gradient(
+    900px 380px at 12% -10%,
+    rgba(99, 102, 241, 0.13),
+    transparent 60%
+  );
+  --qa-rail: rgba(99, 102, 241, 0.07);
+}
+[data-mantine-color-scheme="dark"] {
+  --qa-page: #0b0d17;
+  --qa-surface: rgba(24, 27, 42, 0.92);
+  --qa-surface-2: rgba(30, 33, 51, 0.75);
+  --qa-border: rgba(255, 255, 255, 0.08);
+  --qa-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4), 0 16px 34px -20px rgba(0, 0, 0, 0.8);
+  --qa-shadow-hover:
+    0 1px 1px rgba(0, 0, 0, 0.4), 0 20px 44px -18px rgba(129, 140, 248, 0.4);
+  --qa-glow: radial-gradient(
+    900px 380px at 12% -10%,
+    rgba(99, 102, 241, 0.2),
+    transparent 60%
+  );
+  --qa-rail: rgba(129, 140, 248, 0.08);
+}
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  text-decoration: none;
+}
+.mantine-AppShell-main {
+  min-width: 0;
+  background: var(--qa-page);
+  background-image: var(--qa-glow);
+  background-repeat: no-repeat;
+}
+.mantine-AppShell-header {
+  background: var(--qa-surface);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--qa-border);
+}
+.mantine-AppShell-navbar {
+  background: var(--qa-surface);
+  border-right: 1px solid var(--qa-border);
+  display: flex;
+  flex-direction: column;
+}
+/* ---------- brand ---------- */
+.brand {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  background: linear-gradient(100deg, var(--qa-accent), var(--qa-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  background: linear-gradient(135deg, var(--qa-accent), var(--qa-accent-2));
+  box-shadow: 0 6px 16px -6px rgba(99, 102, 241, 0.8);
+}
+.nav-section {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* ---------- nav tree ---------- */
+.nav-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+.nav-tree,
+.nav-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-branch + .nav-branch {
+  margin-top: 4px;
+}
+.nav-parent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--mantine-color-dimmed);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+.nav-parent:hover {
+  background: var(--qa-rail);
+  color: var(--mantine-color-text);
+}
+.nav-parent-glyph {
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.75;
+}
+.nav-parent-label {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-chevron {
+  font-size: 17px;
+  line-height: 1;
+  transition: transform 160ms ease;
+}
+.nav-chevron.expanded {
+  transform: rotate(90deg);
+}
+.nav-children {
+  padding: 2px 0 6px 14px;
+  margin-left: 8px;
+  border-left: 1px solid var(--qa-border);
+}
+.nav-leaf {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--mantine-color-text);
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+.nav-leaf:hover {
+  background: var(--qa-rail);
+}
+.nav-leaf.active {
+  background: var(--qa-rail);
+  color: var(--mantine-color-indigo-light-color);
+  font-weight: 700;
+}
+.nav-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--mantine-color-dimmed);
+  opacity: 0.4;
+  transition: all 120ms ease;
+}
+.nav-leaf.active .nav-bullet {
+  opacity: 1;
+  background: linear-gradient(var(--qa-accent), var(--qa-accent-2));
+  box-shadow: 0 0 0 3px var(--qa-rail);
+}
+/* ---------- surfaces ---------- */
+.mantine-SimpleGrid-root > *,
+.mantine-Stack-root > * {
+  min-width: 0;
+}
+.surface {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--qa-surface);
+  border-color: var(--qa-border) !important;
+  box-shadow: var(--qa-shadow);
+}
+.surface.highlight {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(99, 102, 241, 0.1),
+      rgba(168, 85, 247, 0.06) 60%,
+      transparent
+    ),
+    var(--qa-surface);
+}
+.page-title {
+  letter-spacing: -0.7px;
+}
+.crumb {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: var(--mantine-color-dimmed);
+  font-weight: 600;
+}
+.crumb:hover {
+  color: var(--mantine-color-indigo-light-color);
+}
+.field-label {
+  letter-spacing: 0.08em;
+}
+.glyph {
+  font-size: 16px;
+  line-height: 1;
+}
+/* ---------- tables ---------- */
+.mantine-Table-th {
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--mantine-color-dimmed);
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+.mantine-Table-td {
+  vertical-align: middle;
+}
+.row-link {
+  cursor: pointer;
+}
+.cell-main {
+  min-width: 180px;
+  max-width: 520px;
+}
+.cell-date,
+.cell-action {
+  white-space: nowrap;
+}
+.cell-action {
+  width: 1%;
+  text-align: right;
+}
+.badge-wrap {
+  height: auto;
+  min-height: 22px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.35;
+  padding-block: 3px;
+}
+.badge-wrap .mantine-Badge-label {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+/* ---------- tabs ---------- */
+.mantine-Tabs-list {
+  border-bottom: 1px solid var(--qa-border);
+  gap: 4px;
+}
+.mantine-Tabs-tab {
+  font-weight: 650;
+  font-size: 14px;
+  border: 0 !important;
+  border-radius: 10px 10px 0 0;
+  padding: 11px 18px;
+  color: var(--mantine-color-dimmed);
+}
+.mantine-Tabs-tab:hover {
+  background: var(--qa-rail);
+}
+.mantine-Tabs-tab[data-active] {
+  background: var(--qa-surface);
+  color: var(--mantine-color-text);
+  box-shadow: inset 0 2px 0 0 var(--qa-accent);
+}
+/* ---------- suites ---------- */
+.suite-code {
+  min-width: 62px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  text-align: center;
+  background: var(--qa-surface-2);
+  border: 1px solid var(--qa-border);
+}
+/* ---------- status ---------- */
+.status-bar {
+  background: var(--qa-surface-2);
+  border: 1px solid var(--qa-border);
+}
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+.status-dot-red {
+  background: var(--mantine-color-red-6);
+}
+.status-dot-yellow {
+  background: var(--mantine-color-yellow-6);
+}
+.status-dot-blue {
+  background: var(--mantine-color-blue-6);
+}
+.status-dot-teal {
+  background: var(--mantine-color-teal-6);
+}
+/* ---------- misc ---------- */
+/* Long unbreakable tokens (Jira URLs, query strings) must wrap instead of
+   pushing past the card edge. */
+.description {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+/* Keeps a long Jira description inside its own card. */
+.description-box {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;
+}
+.ai-summary-text {
+  max-height: 420px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;
+}
+.ai-list {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+.vimeo-player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+}
+.metric-number {
+  font-size: 32px;
+  font-weight: 750;
+  letter-spacing: -1px;
+}
+.ai-card {
+  background:
+    linear-gradient(
+      140deg,
+      rgba(168, 85, 247, 0.09),
+      rgba(99, 102, 241, 0.05) 55%,
+      transparent
+    ),
+    var(--qa-surface);
+}
+.suite-card {
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+.suite-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--qa-shadow-hover);
+  border-color: rgba(99, 102, 241, 0.45) !important;
+}
+.suite-card:focus-visible {
+  outline: 2px solid var(--qa-accent);
+  outline-offset: 2px;
+}
+.suite-chevron {
+  font-size: 20px;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── Documentação ───────────────────────────────────────────────────────────
+   O conteúdo do card vem do editor como HTML, então a prévia e a leitura
+   precisam dar a esse HTML a mesma aparência que ele tinha sendo escrito.
+   Sem isso um título viraria texto do mesmo tamanho do parágrafo e a
+   documentação chegaria ao leitor pior do que foi redigida. */
+.doc-preview {
+  line-height: 1.6;
+  word-break: break-word;
+}
+.doc-preview h1 { font-size: 1.5rem; font-weight: 800; margin: 0 0 0.6rem; }
+.doc-preview h2 { font-size: 1.2rem; font-weight: 700; margin: 1.2rem 0 0.5rem; }
+.doc-preview h3 { font-size: 1.05rem; font-weight: 700; margin: 1rem 0 0.4rem; }
+.doc-preview p { margin: 0 0 0.7rem; }
+.doc-preview ul,
+.doc-preview ol { margin: 0 0 0.7rem 1.2rem; }
+.doc-preview li { margin-bottom: 0.25rem; }
+.doc-preview hr {
+  border: none;
+  border-top: 1px solid var(--mantine-color-default-border);
+  margin: 1.2rem 0;
+}
+.doc-preview blockquote {
+  margin: 0 0 0.7rem;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--mantine-color-default-border);
+  color: var(--mantine-color-dimmed);
+}
+.doc-preview pre {
+  padding: 0.8rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  background: var(--mantine-color-default-hover);
+}
+.doc-preview code { font-size: 0.86em; }
+.doc-preview a { color: var(--mantine-color-anchor); }
+.doc-preview img,
+.doc-preview video { max-width: 100%; border-radius: 8px; }
+/* O badge do editor viaja como span com data-badge; sem isto ele volta como
+   texto solto ao ser lido fora do editor. */
+.doc-preview span[data-badge] {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.1em 0.5em;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* O player dentro da documentação tem a mesma proporção do que aparece no caso
+   de teste — é o mesmo vídeo, e mudar o tamanho conforme a tela só confundiria. */
+.doc-preview div[data-resizable-video] {
+  margin: 0 0 0.9rem;
+  display: flex;
+  justify-content: center;
+}
+.doc-preview div[data-resizable-video] iframe,
+.doc-preview iframe.vimeo-player {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 10px;
+  background: #000;
+}

@@ -1,0 +1,3 @@
+package com.tester;
+import org.junit.jupiter.api.Test;import com.tester.integration.config.SecretCipher;import static org.assertj.core.api.Assertions.*;
+class SecretCipherTest {@Test void authenticatedEncryptionUsesFreshNonce(){var cipher=new SecretCipher("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");String first=cipher.encrypt("sample-secret");assertThat(first).doesNotContain("sample-secret").isNotEqualTo(cipher.encrypt("sample-secret"));assertThat(cipher.decrypt(first)).isEqualTo("sample-secret");var wrong=new SecretCipher("AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=");assertThatThrownBy(()->wrong.decrypt(first)).isInstanceOf(IllegalStateException.class);}}

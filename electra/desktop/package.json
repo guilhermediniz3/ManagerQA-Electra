@@ -1,0 +1,66 @@
+{
+  "name": "manager-qa-desktop",
+  "productName": "QA Manager",
+  "version": "1.8.6",
+  "description": "QA Manager — banco, backend e interface em um único executável",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "pack": "electron-builder --win nsis --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "br.com.ultracar.managerqa",
+    "productName": "QA Manager",
+    "directories": {
+      "output": "../installer",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "loading.html",
+      "package.json",
+      "capture.js",
+      "capture-picker.js",
+      "capture-picker-preload.js",
+      "capture-picker.html",
+      "capture-picker-renderer.js"
+    ],
+    "extraResources": [
+      {
+        "from": "resources",
+        "to": "runtime",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "QA-Manager-Setup-${version}.${ext}",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QA Manager"
+    },
+    "compression": "maximum"
+  }
+}

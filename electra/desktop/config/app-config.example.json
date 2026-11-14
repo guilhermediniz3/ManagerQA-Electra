@@ -1,0 +1,8 @@
+{
+  "dbName": "manager",
+  "dbUser": "postgres",
+  "dbPassword": "",
+  "jwtSecret": "",
+  "integrationMasterKey": "",
+  "dataProfile": "ManagerQA"
+}

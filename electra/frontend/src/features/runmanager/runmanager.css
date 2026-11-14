@@ -1,0 +1,121 @@
+/*
+ * Aparência do painel do RunManager.
+ *
+ * O desenho vem do RunManagerCloud — cards escuros com borda fina, faixa de cor
+ * por ambiente, terminal preto. Ele é reproduzido aqui com as variáveis de tema
+ * do QA Manager, e não copiado do outro projeto: lá é Tailwind, aqui é Mantine,
+ * e trazer o CSS de lá arrastaria um segundo sistema de estilo para dentro deste.
+ *
+ * Por usar as variáveis do tema, o painel acompanha o modo claro e o escuro do
+ * aplicativo em vez de ficar escuro à força numa tela clara.
+ */
+
+.run-container {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--mantine-color-body);
+  transition: border-color 120ms ease;
+}
+
+.run-container:hover {
+  border-color: var(--mantine-color-default-border);
+}
+
+.run-container[data-inactive="true"] {
+  opacity: 0.55;
+}
+
+.run-container-title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Os botões de disparo. Homologação em verde, produção em vermelho: a cor é o
+ * aviso que se lê antes de clicar, e é a mesma convenção do painel de origem.
+ */
+.run-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--run-card-border, var(--mantine-color-default-border));
+  background: var(--run-card-bg, transparent);
+  color: var(--run-card-fg, var(--mantine-color-text));
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.run-card:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.run-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.run-card[data-env="hml"] {
+  --run-card-border: color-mix(in srgb, var(--mantine-color-teal-6) 55%, transparent);
+  --run-card-bg: color-mix(in srgb, var(--mantine-color-teal-6) 12%, transparent);
+  --run-card-fg: var(--mantine-color-teal-7);
+}
+
+.run-card[data-env="prod"] {
+  --run-card-border: color-mix(in srgb, var(--mantine-color-red-6) 55%, transparent);
+  --run-card-bg: color-mix(in srgb, var(--mantine-color-red-6) 12%, transparent);
+  --run-card-fg: var(--mantine-color-red-7);
+}
+
+[data-mantine-color-scheme="dark"] .run-card[data-env="hml"] {
+  --run-card-fg: var(--mantine-color-teal-3);
+}
+
+[data-mantine-color-scheme="dark"] .run-card[data-env="prod"] {
+  --run-card-fg: var(--mantine-color-red-3);
+}
+
+/*
+ * Terminal. Fundo escuro nos dois temas de propósito: é a saída de um terminal,
+ * e lê-la em fundo claro com cores de terminal dá contraste ruim.
+ */
+.run-terminal {
+  background: #0b0d17;
+  color: #d7dce5;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 16px;
+  font-family: "Cascadia Mono", "Consolas", "SF Mono", monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: auto;
+  max-height: 460px;
+}
+
+.run-terminal-empty {
+  color: #6b7280;
+}
+
+/* Barras do mapa de falhas por módulo. */
+.run-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mantine-color-red-6) 70%, transparent);
+}
+
+.run-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--mantine-color-default-border);
+  overflow: hidden;
+}

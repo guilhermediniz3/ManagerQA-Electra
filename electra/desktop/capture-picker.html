@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src data:;">
+<title>Escolher o que gravar · QA Manager</title>
+<style>
+:root { color-scheme:dark; font-family:"Segoe UI",system-ui,sans-serif; color:#f3f3f6; background:#17181d; }
+* { box-sizing:border-box; }
+body { margin:0; height:100vh; display:flex; flex-direction:column; }
+header { padding:26px 30px 0; }
+.eyebrow { display:flex; align-items:center; gap:8px; color:#aeb0be; font-size:11px; font-weight:700; letter-spacing:1.5px; }
+.rec-dot { width:7px; height:7px; border-radius:50%; background:#ff6975; }
+h1 { font-size:24px; font-weight:650; letter-spacing:-.5px; margin:10px 0 7px; }
+.description { color:#aeb0be; font-size:14px; margin:0; }
+.toolbar { display:flex; align-items:center; justify-content:space-between; gap:15px; padding:22px 30px 0; border-bottom:1px solid #34353e; }
+.tabs { display:flex; gap:24px; }
+button { font:inherit; cursor:pointer; }
+.tab { padding:0 2px 13px; background:none; color:#aeb0be; border:0; border-bottom:3px solid transparent; font-size:14px; font-weight:600; }
+.tab[aria-selected="true"] { color:#f8f8fc; border-bottom-color:#9295ff; }
+.count { margin-left:6px; font-size:11px; padding:2px 6px; background:#32333e; border-radius:6px; color:#c9cbd8; }
+.refresh { margin-bottom:13px; padding:5px 7px; border:0; background:transparent; color:#b8bad0; font-size:12px; }
+.refresh:hover { color:white; }
+main { flex:1; min-height:0; overflow:auto; padding:22px 30px; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-content:start; }
+.grid.windows { grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.source { padding:0; background:#22232b; border:2px solid #363741; border-radius:10px; overflow:hidden; text-align:left; color:#f3f3f6; min-width:0; transition:border-color .12s; }
+.source:hover { border-color:#777987; }
+.source[aria-pressed="true"] { border-color:#a2a4ff; background:#2a2b40; box-shadow:0 0 0 1px #a2a4ff; }
+.preview { aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; background:#101115; border-bottom:1px solid #353641; position:relative; }
+.preview>img { width:100%; height:100%; object-fit:contain; }
+.placeholder { color:#757783; font-size:12px; }
+.check { position:absolute; right:10px; top:10px; height:22px; width:22px; border:1px solid #777987; border-radius:50%; background:#17181dcc; display:grid; place-items:center; font-size:13px; color:transparent; }
+.source[aria-pressed="true"] .check { background:#a2a4ff; border-color:#a2a4ff; color:#15151c; }
+.caption { padding:12px 13px; }
+.name-row { display:flex; align-items:center; gap:7px; }
+.app-icon { width:17px; height:17px; flex:none; }
+.name { display:block; font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.detail { display:block; margin-top:4px; font-size:11px; color:#a8aab9; }
+.message { padding:65px 12px; text-align:center; color:#b4b6c5; font-size:14px; line-height:1.6; }
+footer { border-top:1px solid #34353e; padding:17px 30px 22px; flex:none; background:#1b1c22; }
+.audio { font-size:12px; color:#afb1c0; margin:0 0 15px; }
+.bottom { display:flex; gap:20px; align-items:center; justify-content:space-between; }
+.selection { margin:0; font-size:12px; color:#bcbeca; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.actions { display:flex; gap:10px; flex:none; }
+.action { border-radius:7px; padding:10px 18px; border:1px solid #484a57; font-size:13px; font-weight:600; background:#292a33; color:#f2f2f7; }
+.action:hover { background:#353641; }
+.primary { background:#9194ff; border-color:#9194ff; color:#12121b; }
+.primary:hover { background:#a6a8ff; }
+button:disabled { opacity:.4; cursor:default; }
+button:focus-visible { outline:2px solid #c7c8ff; outline-offset:4px; }
+@media(max-width:760px) { .grid.windows { grid-template-columns:repeat(2,minmax(0,1fr)); } header { padding-top:20px; } h1 { font-size:22px; } }
+</style>
+<script src="capture-picker-renderer.js" defer></script>
+</head>
+<body>
+<header><div class="eyebrow"><span class="rec-dot"></span> GRAVAÇÃO DE EVIDÊNCIA</div><h1>O que você quer gravar?</h1><p class="description">Escolha um monitor inteiro ou apenas uma janela para o seu vídeo.</p></header>
+<div class="toolbar"><div class="tabs" role="tablist" aria-label="Tipo de captura">
+<button id="tab-screen" class="tab" role="tab" aria-selected="true" aria-controls="sources" data-kind="screen">Tela inteira <span id="count-screen" class="count">0</span></button>
+<button id="tab-window" class="tab" role="tab" aria-selected="false" aria-controls="sources" data-kind="window" tabindex="-1">Janela <span id="count-window" class="count">0</span></button>
+</div><button id="refresh" class="refresh" aria-label="Atualizar telas e janelas">↻ Atualizar</button></div>
+<main id="sources" role="tabpanel" aria-labelledby="tab-screen"><div id="message" class="message" role="status">Carregando telas e janelas…</div><div id="grid" class="grid"></div></main>
+<footer><p id="audio" class="audio">A gravação começa somente depois da sua confirmação.</p><div class="bottom"><p id="selection" class="selection" aria-live="polite">Selecione um monitor para continuar.</p><div class="actions"><button id="cancel" class="action">Cancelar</button><button id="share" class="action primary" disabled>Compartilhar e gravar</button></div></div></footer>
+</body>
+</html>

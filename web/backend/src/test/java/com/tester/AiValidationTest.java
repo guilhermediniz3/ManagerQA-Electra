@@ -1,0 +1,3 @@
+package com.tester;
+import org.junit.jupiter.api.Test;import com.tester.integration.ai.AiService;import com.fasterxml.jackson.databind.ObjectMapper;import java.util.List;import static org.assertj.core.api.Assertions.*;
+class AiValidationTest {@Test void rejectsMalformedOutputWithoutPersistence(){var ai=new AiService(List.of(),new ObjectMapper(),null,null,null);assertThatThrownBy(()->ai.normalize("not json")).hasMessageContaining("Nenhum caso foi salvo");assertThatThrownBy(()->ai.normalize("{\"cases\":[{\"scenario\":\"\",\"expectedResult\":\"x\"}]}")).hasMessageContaining("Nenhum caso foi salvo");assertThat(ai.normalize("{\"cases\":[{\"scenario\":\"Login\",\"expectedResult\":\"Acesso concedido\"}]}")).hasSize(1);}}
