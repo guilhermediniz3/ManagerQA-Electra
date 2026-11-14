@@ -1,6 +1,6 @@
 # QA Manager — Electron e Web
 
-Fontes da versão **1.8.7** do QA Manager, com as duas edições do projeto:
+Fontes da versão **1.8.8** do QA Manager, com as duas edições do projeto:
 
 | Pasta | Conteúdo |
 | --- | --- |
@@ -10,7 +10,7 @@ Fontes da versão **1.8.7** do QA Manager, com as duas edições do projeto:
 | `web/backend` | Backend da edição web |
 | `web/frontend` | Frontend da edição web |
 
-As duas cópias são mantidas separadas para preservar a organização dos projetos originais. Consulte [as notas da versão](RELEASE-1.8.7.md).
+As duas cópias são mantidas separadas para preservar a organização dos projetos originais. Consulte [as notas da versão](RELEASE-1.8.8.md).
 
 ## Funcionalidades
 

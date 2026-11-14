@@ -146,7 +146,7 @@ public class SuiteCommentService {
     }
     private JsonNode resultParagraph(String value) {
         var node=paragraph(value);
-        String color=value!=null && value.startsWith("Falhou")?"#AE2E24":value!=null && value.startsWith("Aprovado")?"#216E4E":value!=null && value.startsWith("Impedimento")?"#946F00":value!=null && (value.equals("em progresso") || value.startsWith("Em progresso"))?"#0055CC":null;
+        String color=value!=null && value.startsWith("Falhou")?"#AE2E24":value!=null && value.startsWith("Aprovado")?"#216E4E":value!=null && value.startsWith("Impedimento")?"#FFFF00":value!=null && (value.equals("em progresso") || value.startsWith("Em progresso"))?"#0055CC":null;
         if(color!=null)for(var text:node.path("content"))if("text".equals(text.path("type").asText())) {
             var marks=((com.fasterxml.jackson.databind.node.ObjectNode)text).putArray("marks");
             marks.addObject().put("type","strong");
