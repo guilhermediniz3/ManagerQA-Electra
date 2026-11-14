@@ -1,7 +1,7 @@
 {
   "name": "manager-qa-desktop",
   "productName": "QA Manager",
-  "version": "1.8.6",
+  "version": "1.8.7",
   "description": "QA Manager — banco, backend e interface em um único executável",
   "main": "main.js",
   "private": true,

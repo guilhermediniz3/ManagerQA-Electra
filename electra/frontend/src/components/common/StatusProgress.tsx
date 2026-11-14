@@ -39,7 +39,7 @@ export function StatusProgress({
             <Group key={s} gap={7} wrap="nowrap">
               <span
                 className={"status-dot status-dot-" + statusMeta[s].color}
-                style={{background: `var(--mantine-color-${statusMeta[s].color}-6)`}}
+                style={{background: statusMeta[s].color.startsWith("#") ? statusMeta[s].color : `var(--mantine-color-${statusMeta[s].color}-6)`}}
               />
               <Text size="xs" c={t.counts[s] ? undefined : "dimmed"}>
                 {statusMeta[s].short}{" "}

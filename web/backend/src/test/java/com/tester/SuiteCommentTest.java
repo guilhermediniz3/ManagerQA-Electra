@@ -269,13 +269,14 @@ class SuiteCommentTest {
         assertThat(preview.rows().get(0).subList(2,5)).containsExactly("Falhou: 25% (1)","Impedimento: 25% (1)","Em progresso: 25% (1)");
         assertThat(preview.rows().get(1).subList(2,5)).containsExactly("Aprovado: 25% (1)","Total da suíte: 4 CTs","Detalhes enviados: 1 CT");
         var doc=service.document("QA-42",9L,Set.of(Status.RETORNO));
-        assertThat(doc.at("/content/1/content/0/content/3/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
+        assertThat(doc.at("/content/1/content/0/content/3/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#946F00");
         assertThat(doc.at("/content/1/content/0/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
         assertThat(doc.at("/content/1/content/1/content/2/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#216E4E");
     }
-    @Test void impedimentAndInProgressRowsAreBlue() {
+    @Test void impedimentIsYellowAndInProgressIsBlue() {
         suite.setCases(Set.of(caso(1L,"Bloqueado",Status.IMPEDIMENTO),caso(2L,"Andamento",Status.EM_PROGRESSO)));
         var doc=service().document("QA-42",9L,Set.of());
-        for(int row:new int[]{6,7})assertThat(doc.at("/content/1/content/"+row+"/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
+        assertThat(doc.at("/content/1/content/6/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#946F00");
+        assertThat(doc.at("/content/1/content/7/content/4/content/0/content/0/marks/1/attrs/color").asText()).isEqualTo("#0055CC");
     }
 }

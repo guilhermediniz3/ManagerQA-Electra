@@ -10,7 +10,7 @@ export const statusMeta: Record<
   { label: string; short: string; color: string }
 > = {
   RETORNO: { label: "Falhou", short: "Falhou", color: "red" },
-  IMPEDIMENTO: { label: "Impedimento", short: "Bloqueado", color: "blue" },
+  IMPEDIMENTO: { label: "Impedimento", short: "Impedimento", color: "#946F00" },
   EM_PROGRESSO: { label: "Em progresso", short: "Em progresso", color: "blue" },
   CONCLUIDA: { label: "Aprovado", short: "Aprovado", color: "green" },
 };
